@@ -15,34 +15,17 @@ RUN pnpm --filter @payroll/contracts build
 RUN pnpm --filter @payroll/config build
 RUN pnpm --filter @payroll/database build
 RUN pnpm --filter @payroll/api build
-RUN CI=true pnpm prune --prod
 
-FROM node:24-bookworm-slim AS runtime
+FROM base AS runtime
 
 ENV NODE_ENV=production
 WORKDIR /app
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends openssl \
-  && rm -rf /var/lib/apt/lists/* \
-  && groupadd --system --gid 1001 app \
+RUN groupadd --system --gid 1001 app \
   && useradd --system --uid 1001 --gid app -m -d /home/app app \
-  && mkdir -p /app/apps/api/storage/payslips \
-  && chown -R app:app /app/apps/api/storage
+  && mkdir -p /app/apps/api/storage/payslips
 
-COPY --chown=app:app --from=build /app/node_modules ./node_modules
-COPY --chown=app:app --from=build /app/apps/api/node_modules ./apps/api/node_modules
-COPY --chown=app:app --from=build /app/apps/api/dist ./apps/api/dist
-COPY --chown=app:app --from=build /app/apps/api/package.json ./apps/api/package.json
-COPY --chown=app:app --from=build /app/packages/config/dist ./packages/config/dist
-COPY --chown=app:app --from=build /app/packages/config/package.json ./packages/config/package.json
-COPY --chown=app:app --from=build /app/packages/contracts/dist ./packages/contracts/dist
-COPY --chown=app:app --from=build /app/packages/contracts/package.json ./packages/contracts/package.json
-COPY --chown=app:app --from=build /app/packages/database/node_modules ./packages/database/node_modules
-COPY --chown=app:app --from=build /app/packages/database/dist ./packages/database/dist
-COPY --chown=app:app --from=build /app/packages/database/package.json ./packages/database/package.json
-COPY --chown=app:app --from=build /app/packages/database/prisma ./packages/database/prisma
-COPY --chown=app:app --from=build /app/packages/database/prisma.config.ts ./packages/database/prisma.config.ts
-COPY --chown=app:app --from=build /app/apps/api/scripts ./apps/api/scripts
+COPY --chown=app:app --from=build /app ./
+RUN chown -R app:app /app
 
 USER app
 EXPOSE 4000
