@@ -12,7 +12,7 @@ FROM base AS build
 ARG NEXT_PUBLIC_API_URL=http://localhost:4000/api
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 COPY . .
-RUN pnpm install --frozen-lockfile --prod=false
+RUN pnpm install --no-frozen-lockfile --prod=false
 RUN pnpm --filter @payroll/web... build
 
 FROM node:24-bookworm-slim AS runtime

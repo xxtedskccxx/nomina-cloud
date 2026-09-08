@@ -10,7 +10,7 @@ WORKDIR /app
 
 FROM base AS build
 COPY . .
-RUN pnpm install --frozen-lockfile --prod=false
+RUN pnpm install --no-frozen-lockfile --prod=false
 RUN pnpm --filter @payroll/contracts build
 RUN pnpm --filter @payroll/config build
 RUN pnpm --filter @payroll/database build
