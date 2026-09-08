@@ -64,19 +64,19 @@ export default function LoginPage() {
       <header className="login-topbar">
         <div className="login-brand-group">
           <div className="login-logo-mark" aria-hidden="true">
-            N
+            I
           </div>
           <div>
-            <span className="login-brand-text">NóminaCloud</span>
+            <span className="login-brand-text">Integra Nómina</span>
             <span className="login-badge-enterprise" style={{ marginLeft: '0.5rem' }}>
-              Enterprise
+              Portal Oficial
             </span>
           </div>
         </div>
 
         <div className="login-status-indicator">
           <span className="login-status-dot" aria-hidden="true" />
-          <span>Servidor en línea • TLS 256-bit</span>
+          <span>Sistema Activo • Conexión Segura</span>
         </div>
       </header>
 
@@ -88,16 +88,16 @@ export default function LoginPage() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
-            <span>Plataforma Segura de Nómina</span>
+            <span>Portal de Autoservicio del Empleado</span>
           </div>
 
           <h1 className="login-hero-title">
-            Distribución inteligente y confidencial de <span>volantes de nómina</span>
+            Gestión y consulta oficial de <span>recibos de nómina</span>
           </h1>
 
           <p className="login-hero-desc">
-            Acceso centralizado para consultar, descargar y auditar comprobantes de pago oficiales,
-            retenciones y certificaciones laborales en tiempo real.
+            Plataforma institucional para la entrega y consulta de comprobantes de pago,
+            retenciones y constancias laborales de tu organización.
           </p>
 
           <div className="login-features-grid">
@@ -109,8 +109,8 @@ export default function LoginPage() {
                 </svg>
               </div>
               <div className="login-feature-content">
-                <h4>Seguridad de Extremo a Extremo</h4>
-                <p>Cifrado bancario en tránsito y en reposo. Acceso restringido exclusivamente a tu registro personal.</p>
+                <h4>Confidencialidad y Seguridad Salarial</h4>
+                <p>Protección integral de datos laborales. Acceso restringido y exclusivo para cada colaborador.</p>
               </div>
             </div>
 
@@ -125,8 +125,8 @@ export default function LoginPage() {
                 </svg>
               </div>
               <div className="login-feature-content">
-                <h4>Trazabilidad y Validez Legal</h4>
-                <p>Registro auditado de visualización y descarga con valor probatorio laboral ante la entidad reguladora.</p>
+                <h4>Validez Legal y Acuse de Recibo</h4>
+                <p>Trazabilidad con valor probatorio laboral y registro oficial de visualización y descarga.</p>
               </div>
             </div>
 
@@ -138,8 +138,8 @@ export default function LoginPage() {
                 </svg>
               </div>
               <div className="login-feature-content">
-                <h4>Disponibilidad 24/7 en la Nube</h4>
-                <p>Descarga tus comprobantes en cualquier momento desde tu teléfono móvil o computador.</p>
+                <h4>Acceso Seguro Permanente</h4>
+                <p>Consulta y descarga tu historial completo de comprobantes en cualquier momento.</p>
               </div>
             </div>
           </div>
@@ -300,8 +300,8 @@ export default function LoginPage() {
 
       {/* Corporate Footer */}
       <footer className="login-footer-bar">
-        <div>© 2026 NóminaCloud Enterprise • Todos los derechos reservados</div>
-        <div>Cumplimiento normativo laboral • Protección de datos sensibles garantizada</div>
+        <div>© 2026 Integra Nómina • Todos los derechos reservados</div>
+        <div>Sistema Oficial de Gestión y Distribución de Recibos de Nómina</div>
       </footer>
     </div>
   )

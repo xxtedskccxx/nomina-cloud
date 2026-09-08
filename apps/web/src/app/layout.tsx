@@ -3,8 +3,8 @@ import type { ReactNode } from 'react'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Volantes | Proyecto Nómina',
-  description: 'Entrega y consulta segura de volantes de nómina.',
+  title: 'Volantes de Pago | Integra Nómina',
+  description: 'Portal oficial de consulta y entrega de comprobantes de pago y nómina.',
 }
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

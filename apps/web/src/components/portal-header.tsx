@@ -29,9 +29,9 @@ export function PortalHeader({ role, name }: { role: 'ADMIN' | 'EMPLOYEE'; name?
       <div className="site-header-inner">
         <Link href={homePath} className="brand-lockup" aria-label="Ir al inicio del portal">
           <span className="brand-mark" aria-hidden="true">
-            P
+            I
           </span>
-          <span>Proyecto Nómina</span>
+          <span>Integra Nómina</span>
         </Link>
         <span className="header-role">{role === 'ADMIN' ? 'RRHH' : 'Empleado'}</span>
 
