@@ -1,0 +1,13 @@
+process.env.NODE_ENV = 'test'
+process.env.API_PORT = '4000'
+process.env.WEB_PORT = '3000'
+process.env.DATABASE_URL = 'postgresql://payroll:1234@127.0.0.1:5433/payroll?schema=public'
+process.env.BETTER_AUTH_SECRET = `test-only-${'x'.repeat(40)}`
+process.env.BETTER_AUTH_URL = 'http://localhost:4000'
+process.env.WEB_URL = 'http://localhost:3000'
+process.env.LOG_LEVEL = 'silent'
+process.env.SWAGGER_ENABLED = 'false'
+process.env.PAYSLIP_STORAGE_ROOT = 'storage/test-payslips'
+process.env.PAYSLIP_MAX_FILE_SIZE_BYTES = '20000000'
+process.env.PAYSLIP_MAX_FILES_PER_UPLOAD = '100'
+process.env.PAYSLIP_MAX_FILES_PER_BATCH = '500'

@@ -1,0 +1,142 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 24.x
+  PNPM_VERSION: 11.19.0
+  NODE_ENV: test
+  DATABASE_URL: postgresql://payroll:1234@127.0.0.1:5433/payroll?schema=public
+  BETTER_AUTH_SECRET: ci-only-secret-that-is-at-least-32-characters
+  BETTER_AUTH_URL: http://localhost:4000
+  WEB_URL: http://localhost:3000
+  NEXT_PUBLIC_API_URL: http://localhost:4000/api
+  PAYSLIP_STORAGE_DRIVER: local
+  PAYSLIP_STORAGE_ROOT: storage/test-payslips
+  SWAGGER_ENABLED: false
+  SEED_ADMIN_EMAIL: admin.dev@example.test
+  SEED_ADMIN_NAME: CI Development Admin
+  SEED_ADMIN_USERNAME: admin_dev
+  SEED_ADMIN_PASSWORD: ci-only-admin-password
+  SEED_EMPLOYEE_ENABLED: false
+  SEED_DOMAIN_ENABLED: true
+
+jobs:
+  quality:
+    name: Quality and integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: payroll
+          POSTGRES_USER: payroll
+          POSTGRES_PASSWORD: 1234
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U payroll -d payroll"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Generate Prisma client
+        run: pnpm db:generate
+      - name: Apply migrations
+        run: pnpm db:deploy
+      - name: Check formatting
+        run: pnpm format:check
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Lint
+        run: pnpm lint
+      - name: Unit tests
+        run: pnpm test
+      - name: Unit coverage
+        run: pnpm test:coverage
+      - name: Real PostgreSQL tests
+        run: pnpm test:real
+      - name: Production build
+        run: pnpm build
+      - name: Production dependency audit
+        run: pnpm audit --prod
+
+  playwright:
+    name: Playwright E2E
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: payroll
+          POSTGRES_USER: payroll
+          POSTGRES_PASSWORD: 1234
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U payroll -d payroll"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Generate Prisma client
+        run: pnpm db:generate
+      - name: Apply migrations
+        run: pnpm db:deploy
+      - name: Seed CI admin
+        run: pnpm --filter @payroll/api seed:dev
+        env:
+          NODE_ENV: development
+      - name: Build API and Web
+        run: pnpm build
+      - name: Run Playwright
+        run: pnpm e2e
+      - name: Upload Playwright artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-failure-artifacts
+          path: |
+            playwright-report
+            test-results
+          if-no-files-found: ignore

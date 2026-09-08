@@ -1,0 +1,17 @@
+packages:
+  - apps/*
+  - packages/*
+
+allowBuilds:
+  '@parcel/watcher': true
+  '@prisma/engines': true
+  '@scarf/scarf': false
+  prisma: true
+  unrs-resolver: true
+
+minimumReleaseAgeExclude:
+  - mysql2@3.24.3
+
+overrides:
+  deepmerge-ts: 8.0.2
+  mysql2: 3.24.3
