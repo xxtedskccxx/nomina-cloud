@@ -1,3 +1,4 @@
+import fs from 'node:fs'
 /* global process */
 import { execSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
@@ -13,9 +14,17 @@ if (typeof process.loadEnvFile === 'function') {
 
 console.log('[Production Startup] Checking database connection and running migrations...')
 try {
-  execSync('npx prisma migrate deploy --config packages/database/prisma.config.ts', {
+  const localPrisma = resolve(currentDir, '../../../packages/database/node_modules/prisma/build/index.js')
+  const rootPrisma = resolve(currentDir, '../../../node_modules/prisma/build/index.js')
+  const prismaExec = fs.existsSync(localPrisma)
+    ? `node "${localPrisma}"`
+    : fs.existsSync(rootPrisma)
+      ? `node "${rootPrisma}"`
+      : 'npx --yes prisma'
+
+  execSync(`${prismaExec} migrate deploy --config packages/database/prisma.config.ts`, {
     stdio: 'inherit',
-    env: process.env,
+    env: { ...process.env, HOME: '/home/app' },
   })
   console.log('[Production Startup] Database migrations up to date.')
 } catch (error) {

@@ -1,11 +1,13 @@
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { config as loadDotEnv } from 'dotenv'
-
-loadDotEnv({
-  path: resolve(dirname(fileURLToPath(import.meta.url)), '../../../.env'),
-  quiet: true,
-})
+const envFilePath = resolve(dirname(fileURLToPath(import.meta.url)), '../../../.env')
+if (process.env.NODE_ENV !== 'production' && typeof process.loadEnvFile === 'function') {
+  try {
+    process.loadEnvFile(envFilePath)
+  } catch {
+    // Ignored in production
+  }
+}
 
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
