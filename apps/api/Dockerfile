@@ -40,7 +40,9 @@ COPY --chown=app:app --from=build /app/packages/contracts/package.json ./package
 COPY --chown=app:app --from=build /app/packages/database/dist ./packages/database/dist
 COPY --chown=app:app --from=build /app/packages/database/package.json ./packages/database/package.json
 COPY --chown=app:app --from=build /app/packages/database/prisma ./packages/database/prisma
+COPY --chown=app:app --from=build /app/packages/database/prisma.config.ts ./packages/database/prisma.config.ts
+COPY --chown=app:app --from=build /app/apps/api/scripts ./apps/api/scripts
 
 USER app
 EXPOSE 4000
-CMD ["node", "apps/api/dist/main.js"]
+CMD ["node", "apps/api/scripts/start-production.mjs"]
