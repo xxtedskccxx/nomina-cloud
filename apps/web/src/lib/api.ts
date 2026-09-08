@@ -3,10 +3,13 @@ export function apiUrl(path: string): string {
   if (typeof window !== 'undefined') {
     return `/api-backend/${cleanPath}`
   }
-  const apiBaseUrl = (process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:4000/api').replace(
-    /\/$/,
-    '',
-  )
+  const apiBaseUrl = (
+    process.env.API_URL ??
+    process.env.NEXT_PUBLIC_API_URL ??
+    (process.env.NODE_ENV === 'production'
+      ? 'https://api-production-45a7.up.railway.app/api'
+      : 'http://127.0.0.1:4000/api')
+  ).replace(/\/$/, '')
   return `${apiBaseUrl}/${cleanPath}`
 }
 

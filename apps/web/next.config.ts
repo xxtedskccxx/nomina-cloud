@@ -1,5 +1,13 @@
 import type { NextConfig } from 'next'
 
+const apiBase = (
+  process.env.API_URL ??
+  process.env.NEXT_PUBLIC_API_URL ??
+  (process.env.NODE_ENV === 'production'
+    ? 'https://api-production-45a7.up.railway.app/api'
+    : 'http://127.0.0.1:4000/api')
+).replace(/\/$/, '')
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: 'standalone',
@@ -23,7 +31,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api-backend/:path*',
-        destination: 'http://127.0.0.1:4000/api/:path*',
+        destination: `${apiBase}/:path*`,
       },
     ]
   },
