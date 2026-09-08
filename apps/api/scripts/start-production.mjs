@@ -2,10 +2,14 @@
 import { execSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { config as loadDotEnv } from 'dotenv'
-
 const currentDir = dirname(fileURLToPath(import.meta.url))
-loadDotEnv({ path: resolve(currentDir, '../../../.env'), quiet: true })
+if (typeof process.loadEnvFile === 'function') {
+  try {
+    process.loadEnvFile(resolve(currentDir, '../../../.env'))
+  } catch {
+    // Ignored in container where environment variables are injected directly
+  }
+}
 
 console.log('[Production Startup] Checking database connection and running migrations...')
 try {
